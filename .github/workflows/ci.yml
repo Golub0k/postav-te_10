@@ -32,7 +32,7 @@ jobs:
         run: g++ app.cpp -o app
 
       - name: 'Upload Artefact'
-        uses: actions/upload-artefact@v3
+        uses: actions/upload-artifact@v3
         with:
           name: my-artefact
           path: app
