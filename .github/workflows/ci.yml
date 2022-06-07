@@ -1,41 +1,37 @@
-# This is a basic workflow to help you get started with Actions
 
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+env:
+  app_name: app_${{ github.run_number }}
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+
   build_ubuntu:
-    # The type of runner that the job will run on
+
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+
       - uses: actions/checkout@v3
 
       - name: Print env
         run: env
 
       - name: Build
-        run: g++ app.cpp -o app
+        run: g++ app.cpp -o ${{ env.app_name }}_${{ runner.os }}
 
       - name: 'Upload Artefact'
         uses: actions/upload-artifact@v3
         with:
           name: my-artefact
-          path: app_ubuntu
+          path: ${{ env.app_name }}_${{ runner.os }}
           retention-days: 5
 
   build_mac_os:
@@ -47,12 +43,12 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Build
-        run: g++ app.cpp -o app
+        run: g++ app.cpp -o ${{ env.app_name }}_${{ runner.os }}
 
       - name: 'Upload Artefact'
         uses: actions/upload-artifact@v3
         with:
           name: my-artefact
-          path: app_mac
+          path: ${{ env.app_name }}_${{ runner.os }}
           retention-days: 5
 
