@@ -37,4 +37,5 @@ jobs:
       - name: Print gcc version
         run: gcc -v
 
-  test:
+      - name: Build
+        run: g++ app.cpp -o app
