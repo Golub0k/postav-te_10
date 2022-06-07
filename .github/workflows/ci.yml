@@ -34,9 +34,9 @@ jobs:
           path: ${{ env.app_name }}_${{ runner.os }}
           retention-days: 5
 
-  build_mac_os:
+  build_windows:
 
-    runs-on: macos-12
+    runs-on: windows-2022
 
     steps:
 
