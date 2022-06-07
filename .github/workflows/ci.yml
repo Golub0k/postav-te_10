@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: my-artefact
-          path: app
+          path: app_ubuntu
           retention-days: 5
 
   build_mac_os:
@@ -53,6 +53,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: my-artefact
-          path: app
+          path: app_mac
           retention-days: 5
 
