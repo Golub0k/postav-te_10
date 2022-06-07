@@ -15,7 +15,7 @@ jobs:
   build_matrix:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-2022]
+        os: [ubuntu-latest, macos-12]
     runs-on: ${{ matrix.os }}
     env:
       app_name: app_${{ matrix.os }}_${{ github.run_number }}
@@ -26,46 +26,25 @@ jobs:
       - name: 'Upload Artefact'
         uses: actions/upload-artifact@v3
         with:
-          name: my-artefact
-          path: ${{ env.app_name }}
+          name: my-artefact-matrix
+          path: ${{ env.app_name }}**
           retention-days: 5
 
-  build_ubuntu:
+  # build_windows:
 
-    runs-on: ubuntu-latest
+  #   runs-on: windows-2022
 
-    steps:
+  #   steps:
 
-      - uses: actions/checkout@v3
-
-      - name: Print env
-        run: env
-
-      - name: Build
-        run: g++ app.cpp -o ${{ env.app_name }}_${{ runner.os }}
-
-      - name: 'Upload Artefact'
-        uses: actions/upload-artifact@v3
-        with:
-          name: my-artefact
-          path: ${{ env.app_name }}_${{ runner.os }}
-          retention-days: 5
-
-  build_windows:
-
-    runs-on: windows-2022
-
-    steps:
-
-      - uses: actions/checkout@v3
+  #     - uses: actions/checkout@v3
       
-      - name: Build
-        run: g++ app.cpp -o ${{ env.app_name }}_${{ runner.os }}
+  #     - name: Build
+  #       run: g++ app.cpp -o ${{ env.app_name }}_${{ runner.os }}
 
-      - name: 'Upload Artefact'
-        uses: actions/upload-artifact@v3
-        with:
-          name: my-artefact
-          path: ${{ env.app_name }}_${{ runner.os }}
-          retention-days: 5
+  #     - name: 'Upload Artefact'
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: my-artefact
+  #         path: ${{ env.app_name }}_${{ runner.os }}
+  #         retention-days: 5
 
