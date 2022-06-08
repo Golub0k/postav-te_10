@@ -27,7 +27,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: my-artefact-matrix
-          path: ${{ env.app_name }}**
+          path: ${{ env.app_name }}
           retention-days: 5
 
   ms_teams:
@@ -38,7 +38,7 @@ jobs:
         with:
           github-token: ${{ github.token }}
           webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          title: This is a custom message
+          title: 'This is a custom message'
           include-files:
-            ${{ env.app_name }}**
+            ${{ env.app_name }}/**
             
