@@ -30,21 +30,15 @@ jobs:
           path: ${{ env.app_name }}**
           retention-days: 5
 
-  # build_windows:
-
-  #   runs-on: windows-2022
-
-  #   steps:
-
-  #     - uses: actions/checkout@v3
-      
-  #     - name: Build
-  #       run: g++ app.cpp -o ${{ env.app_name }}_${{ runner.os }}
-
-  #     - name: 'Upload Artefact'
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: my-artefact
-  #         path: ${{ env.app_name }}_${{ runner.os }}
-  #         retention-days: 5
-
+  ms_teams:
+    needs: build_matrix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: toko-bifrost/ms-teams-deploy-card@master
+        with:
+          github-token: ${{ github.token }}
+          webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+          title: This is a custom message
+          include-files:
+            ${{ env.app_name }}**
+            
