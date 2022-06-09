@@ -11,14 +11,13 @@ on:
 jobs:
 
   build_matrix:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-2022]
+
     runs-on: windows-latest
     env:
       app_name: app_${{ matrix.os }}_${{ github.run_number }}
     steps:
       - uses: actions/checkout@v3
+      - uses: ilammy/msvc-dev-cmd@v1
       - name: Build
         run: cl /EHsc postav-te_10/Source.cpp
       - name: 'Upload Artefact'
