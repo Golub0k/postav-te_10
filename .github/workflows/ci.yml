@@ -1,63 +1,59 @@
 
-# This is a basic workflow to help you get started with 
-
 name: CI
 
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
- 
+  workflow_dispatch:
+
+
 jobs:
-  build:
-    runs-on: windows-latest
+
+  build_matrix:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-2022]
+    runs-on: ${{ matrix.os }}
+    env:
+      app_name: app_${{ matrix.os }}_${{ github.run_number }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: ilammy/msvc-dev-cmd@v1
-        
-      - name: build
-        run: cl /EHsc postav-te_10/app.cpp
-        
-      - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v2
+      - uses: actions/checkout@v3
+      - name: Build
+        run: g++ app.cpp -o ${{ env.app_name }}
+      - name: 'Upload Artefact'
+        uses: actions/upload-artifact@v3
         with:
-          name: my-artifact
-          path: "*.exe"
-          retention-days: 1
+          name: my-artifact-matrix
+          path: ${{ env.app_name }}
+          retention-days: 5
 
   ms_teams:
-    needs: build
+    needs: build_matrix
     runs-on: ubuntu-latest
     steps:
-      - name: Download
-        uses: actions/download-artifact@v2
-        with:
-          name: my-artifact
-          
       - uses: toko-bifrost/ms-teams-deploy-card@master
         with:
           github-token: ${{ github.token }}
           webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
           title: "This is a custom message"
-          include-files: app.exe
-          
-  telegram:
-    needs: build
+          include-files: ${{ env.app_name }}/**
+  telergam:
+    needs: build_matrix
     runs-on: ubuntu-latest
     steps:
-      - name: Download
+      - name: download artefact
         uses: actions/download-artifact@v2
         with:
-          name: my-artifact
+          name: my-artifact-matrix
+          path: ${{ env.app_name }}
           
       - name: send mess
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          document: app.exe
+          document: ${{ env.app_name }}/**
           message: Golubok
