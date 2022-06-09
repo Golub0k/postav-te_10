@@ -7,8 +7,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-  workflow_dispatch:
-
 
 jobs:
 
@@ -27,7 +25,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact-matrix
-          path: ${{ env.app_name }}
+          path: ${{ env.app_name }}**
           retention-days: 5
 
   ms_teams:
@@ -45,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: download artefact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: my-artifact-matrix
           path: ${{ env.app_name }}
