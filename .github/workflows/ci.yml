@@ -38,7 +38,5 @@ jobs:
         with:
           github-token: ${{ github.token }}
           webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          title: 'This is a custom message'
-          include-files:
-            ${{ env.app_name }}/**
-            
+          title: "This is a custom message"
+          include-files: ${{ env.app_name }}/**
