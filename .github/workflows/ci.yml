@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build
-        run: g++ app.cpp -o ${{ env.app_name }}
+        run: g++ Source.cpp -o ${{ env.app_name }}
       - name: 'Upload Artefact'
         uses: actions/upload-artifact@v3
         with:
