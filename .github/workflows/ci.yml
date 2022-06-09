@@ -24,7 +24,7 @@ jobs:
       - name: 'Upload Artefact'
         uses: actions/upload-artifact@v3
         with:
-          name: my-artifact-matrix
+          name: my-artifact
           path: ${{ env.app_name }}**
           retention-days: 5
 
@@ -32,12 +32,18 @@ jobs:
     needs: build_matrix
     runs-on: ubuntu-latest
     steps:
-      - uses: toko-bifrost/ms-teams-deploy-card@master
+      - name: download artefact
+        uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+          path: my-artifact
+      - name: send mess   
+        uses: toko-bifrost/ms-teams-deploy-card@master
         with:
           github-token: ${{ github.token }}
           webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
           title: "This is a custom message"
-          include-files: ${{ env.app_name }}/**
+          include-files: my-artifact/**
   telergam:
     needs: build_matrix
     runs-on: ubuntu-latest
@@ -45,13 +51,13 @@ jobs:
       - name: download artefact
         uses: actions/download-artifact@v3
         with:
-          name: my-artifact-matrix
-          path: ${{ env.app_name }}
+          name: my-artifact
+          path: my-artifact
           
       - name: send mess
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          document: ${{ env.app_name }}/**
+          document: my-artifact/**
           message: Golubok
