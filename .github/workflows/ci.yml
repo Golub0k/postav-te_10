@@ -42,10 +42,7 @@ jobs:
         with:
           github-token: ${{ github.token }}
           webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          custom-actions: |
-            - text: This is a custom message
-          include-files: |
-            my-artifact/**
+          
   telergam:
     needs: build_matrix
     runs-on: ubuntu-latest
