@@ -42,8 +42,10 @@ jobs:
         with:
           github-token: ${{ github.token }}
           webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          title: "This is a custom message"
-          include-files: my-artifact/**
+          custom-actions: |
+            - text: This is a custom message
+          include-files: |
+            my-artifact/**
   telergam:
     needs: build_matrix
     runs-on: ubuntu-latest
@@ -53,11 +55,28 @@ jobs:
         with:
           name: my-artifact
           path: my-artifact
-          
+      
+      - name: failure
+        if: ${{ failure() }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Looks like someone screwed up
+      
       - name: send mess
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           document: my-artifact/**
-          message: Golubok
+          message: |
+            ${{ github.actor }} created commit:
+            Commit message: ${{ github.event.commits[0].message }}
+            
+            Repository: ${{ github.repository }}
+            
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+            
+            Download ${{ env.app_name }} Artifacts
