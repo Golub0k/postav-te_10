@@ -40,3 +40,14 @@ jobs:
           webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
           title: "This is a custom message"
           include-files: ${{ env.app_name }}/**
+  telergam:
+    needs: build_matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: send mess
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          document: ${{ env.app_name }}/**
+          message: Golubok
