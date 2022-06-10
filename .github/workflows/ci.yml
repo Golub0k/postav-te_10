@@ -58,7 +58,8 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Looks like someone screwed up
+          message: |
+            Looks like someone screwed up💥
       
       - name: send mess
         uses: appleboy/telegram-action@master
@@ -68,10 +69,11 @@ jobs:
           document: my-artifact/**
           message: |
             ${{ github.actor }} created commit:
-            Commit message: ${{ github.event.commits[0].message }}
+            
+            📦✅
             
             Repository: ${{ github.repository }}
             
             See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
-            
+            🚀🚀🚀
             Download ${{ env.app_name }} Artifacts
