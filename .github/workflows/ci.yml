@@ -23,7 +23,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: ${{ github.run_number }}_*.exe
+          path: "*.exe"
           retention-days: 5
 
   ms_teams:
@@ -67,7 +67,7 @@ jobs:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           document: my-artifact/**
           message: |
-            ${{ github.actor }} created commit:
+            ${{ github.actor }} created commit № ${{ github.run_number }}:
             
             📦✅
             
