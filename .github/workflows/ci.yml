@@ -23,7 +23,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: ${{ github.run_number }}_"*.exe"
+          path: ${{ github.run_number }}_*.exe
           retention-days: 5
 
   ms_teams:
