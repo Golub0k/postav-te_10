@@ -10,11 +10,10 @@ on:
 
 jobs:
 
-  build_matrix:
+  build:
 
     runs-on: windows-latest
-    env:
-      app_name: app_${{ matrix.os }}_${{ github.run_number }}
+    
     steps:
       - uses: actions/checkout@v3
       - uses: ilammy/msvc-dev-cmd@v1
@@ -24,11 +23,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: "*.exe"
+          path: "${{ github.run_number }}_*.exe"
           retention-days: 5
 
   ms_teams:
-    needs: build_matrix
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: download artefact
@@ -43,7 +42,7 @@ jobs:
           webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
           
   telergam:
-    needs: build_matrix
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: download artefact
