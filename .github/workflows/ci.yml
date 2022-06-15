@@ -1,0 +1,78 @@
+
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+jobs:
+
+  build:
+
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Build
+        run: cl.exe Source.cpp
+      - name: 'Upload Artefact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: "*.exe"
+          retention-days: 5
+
+  ms_teams:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: download artefact
+        uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+          path: my-artifact
+      - name: send mess   
+        uses: toko-bifrost/ms-teams-deploy-card@master
+        with:
+          github-token: ${{ github.token }}
+          webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+          
+  telergam:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: download artefact
+        uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+          path: my-artifact
+      
+      - name: failure
+        if: ${{ failure() }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Looks like someone screwed up💥
+      
+      - name: send mess
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          document: my-artifact/**
+          message: |
+            ${{ github.actor }} created commit № ${{ github.run_number }}:
+            
+            📦✅
+            
+            Repository: ${{ github.repository }}
+            
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+            🚀🚀🚀
+            Download ${{ env.app_name }} Artifacts
